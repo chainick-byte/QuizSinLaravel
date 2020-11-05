@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo quiz sin laravel</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container" id="principal">
+        <button clas="btn btn-xs btn-info pull-right" onclick="cargaPreguntas('historia')">historia</button>
+        <button clas="btn btn-xs btn-info pull-right" onclick="cargaPreguntas('economia')">economia</button>
+        <button clas="btn btn-xs btn-info pull-right" onclick="cargaPreguntas('ingles')">ingles</button>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous">
+    </script>
+    <script>
+        var marcador=0;
+        var tema="";
+        var pregunta="";
+        var respuesta="";
+        function cargaPreguntas(_tema){
+            console.log("entro aqui");
+            tema=_tema;
+            $('#principal').load('pregunta.html');
+        }
+    </script>
+</body>
+
+</html>
