@@ -4,30 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ejemplo quiz sin laravel</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous">
+    <title>Ejemplo Bootstrap sin Laravel</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
 <body>
     <div class="container" id="principal">
-        <button clas="btn btn-xs btn-info pull-right" onclick="cargaPreguntas('historia')">historia</button>
-        <button clas="btn btn-xs btn-info pull-right" onclick="cargaPreguntas('economia')">economia</button>
-        <button clas="btn btn-xs btn-info pull-right" onclick="cargaPreguntas('ingles')">ingles</button>
+
+        <button class="btn btn-xs btn-info pull-rigth" onclick="cargaPreguntas('Historia');">HISTORIA</button>
+        <button class="btn btn-xs btn-info pull-rigth" onclick="cargaPreguntas('Economia');">ECONOMIA</button>
+        <button class="btn btn-xs btn-info pull-rigth" onclick="cargaPreguntas('Ingles');">Ingles</button>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.js"
-        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous">
-    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
-        var marcador=0;
-        var tema="";
-        var pregunta="";
-        var respuesta="";
-        function cargaPreguntas(_tema){
-            console.log("entro aqui");
-            tema=_tema;
+        var tema = "";
+        var marcador = 0;
+        var seguimos = true;
+        var segundo=1;
+        
+        function cargaPreguntas(_tema) {
             $('#principal').load('pregunta.html');
+            tema = _tema;
         }
+
     </script>
+    
+
 </body>
 
 </html>

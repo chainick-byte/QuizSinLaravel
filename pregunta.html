@@ -1,57 +1,153 @@
+<style>
+    button {
+        /*la separación entre los botones*/
+        margin: 10 0 10 0 !important;
+    }
+</style>
+
 <div class="container">
 
+    <!-- aqui va el temporizador  -->
     <br>
-    <div class="progress" id="barratiempo">
-
-        <div id="tiempo" class="progress progress-bar-striped progress-bar-animated" role="progressbar"
-            style="width:0%"></div>
+    <div id="barratiempo" class="progress">
+        <div id="tiempo" class="progress-bar progress-bar-striped primary  progress-bar-animated" role="progressbar"
+            style="width: 2%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
+
     <br>
+    <!-- los botones del juego  -->
     <div class="row">
         <div class="col-3">
             <h1 id="marcador"></h1>
         </div>
-        <div class="col-6" id="preguntas"></div>
-        <div class="col-3"></div>
+        <div id="preguntas" class="col-6">
+
+        </div>
+        <div class="col-3">
+
+        </div>
     </div>
 </div>
+
 <script>
+
+    var pregunta = "";
     nuevaPregunta();
 
-    function nuevaPregunta(){
-    $.get('http://localhost/EjerciciosLaravel/Preguntas/public/api/preguntas/' + tema,
-        function (_pregunta) {
-            pregunta=_pregunta;
+    function nuevaPregunta() {
+        $.get("http://127.0.0.1/EjerciciosLaravel/Preguntas/public/api/preguntas/" + tema, function (_pregunta) {
+            pregunta = _pregunta;
             $('#marcador').html(marcador);
-            //borro el div
+            dibujaBarraTiempo();
+            //borra todos los botones que pudiera haber
             $('#preguntas').html("");
-            //pinto botones
-            $('#preguntas').append('<button class="btn btn-block btn-dark disabled">' + pregunta.enunciado + '</button>');
-            $('#preguntas').append('<button class="btn btn-block btn-primary disabled" onclick="chequeRespuest(1)" id="1">' + pregunta.r1 + '</button>');
-            $('#preguntas').append('<button class="btn btn-block btn-primary disabled" onclick="chequeRespuest(2)" id="2">' + pregunta.r2 + '</button>');
-            $('#preguntas').append('<button class="btn btn-block btn-primary disabled" onclick="chequeRespuest(3)" id="3">' + pregunta.r3 + '</button>');
-            $('#preguntas').append('<button class="btn btn-block btn-primary disabled" onclick="chequeRespuest(4)" id="4">' + pregunta.r4 + '</button>');
+            //pinta los botones
+            $('#preguntas').append('<button class="btn btn-block btn-dark disabled">' + pregunta.correcta + ' ' + pregunta.enunciado + ' </button>');
+            shuffleArray(array);
+            for (var i = 0; i < array.length; i++) {
+                $('#preguntas').append(array[i] );
+               
+            }
+
         });
     }
 
-    function chequeRespuest(_respuesta) {
+
+
+
+    function chequeaRespuesta(_respuesta, seguimos) {
         $('button').addClass('disabled').prop("onclick", null);
         if (_respuesta == pregunta.correcta) {
+            seguimos = false;
             $('#' + _respuesta).removeClass('btn-primary').addClass('btn-success');
-            $('#preguntas').append('<button class="btn btn-block btn-warning " onclick="sigue()"> PREGUNTA SIGUIENTE  </button>');
+            $('#preguntas').append('<button  class="btn btn-block btn-warning " onclick="sigue()"> PREGUNTA SIGUIENTE  </button>');
+
+
         }
         else {
+            seguimos = false;
+            console.log(seguimos);
             $('#' + _respuesta).removeClass('btn-primary').addClass('btn-danger');
             $('#' + pregunta.correcta).removeClass('btn-primary').addClass('btn-success');
-            $('#preguntas').append('<button class="btn btn-block btn-dark " onclick="pierde()"> maaaal  </button>');
+            $('#preguntas').append('<button id="pierde" class="btn btn-block btn-dark " onclick="pierde()"> PREGUNTA SIGUIENTE  </button>');
+        
+
+
         }
-    } 
-    function sigue(){
+    }
+
+    function sigue() {
+        $('#tiempo').width(0);
+        segundo = 1;
+        $('#tiempo').text(segundo);
         marcador++;
         nuevaPregunta();
-    }  
-    function pierde(){
-        marcador--;
+    }
+
+    function pierde() {
+        $('#tiempo').width(0);
+        segundo = 1;
+
         nuevaPregunta();
-    }  
+    }
+
+
+    //el siguiente método controla la barra de tiempo
+    var seguimos = true;
+    var progress;
+
+
+
+
+    function dibujaBarraTiempo() {
+        //temporizador de la barra  
+
+        clearInterval(progress);
+        if (seguimos == true) {
+            progress = setInterval(function iniciamos() {
+                var $caja = $("#barratiempo");
+
+                $("#tiempo").width($("#tiempo").width() + $caja.width() / 10);
+                segundo++;
+                if ($("#tiempo").width() >= $caja.width()) {
+                    clearInterval(progress);
+                    segundo = 0;
+                    //AQUI PONES LA FUNCIÓN QUE QUIERES EJECUTAR
+                    // SI EL TEMPORIZADOR AGOTA EL TIEMPO, por ejemplo, inCorrecta();
+
+                    chequeaRespuesta(-1);
+
+                }
+                if (segundo < 5) {
+                    $("#tiempo").removeClass("bg-warning");
+                    $("#tiempo").removeClass("bg-danger");
+                    $("#tiempo").addClass("bg-success");
+                } else if (segundo < 8) {
+                    $("#tiempo").removeClass("bg-success");
+                    $("#tiempo").addClass("bg-warning");
+                } else {
+                    $("#tiempo").removeClass("bg-warning");
+                    $("#tiempo").addClass("bg-danger");
+                }
+                $("#tiempo").text(segundo);
+            }, 3600);
+
+
+        }
+    }
+    function stopProgressBar() {
+        clearInterval(progress);
+    }
+    var array = ['<button id="1" class="btn btn-block btn-primary " onclick="chequeaRespuesta(1), stopProgressBar()">' + "pregunta.r1"+'</button>',
+    '<button id="2" class="btn btn-block btn-primary " onclick="chequeaRespuesta(2), stopProgressBar()">' + "pregunta.r2"+ ' </button>',
+    '<button id="3" class="btn btn-block btn-primary " onclick="chequeaRespuesta(3), stopProgressBar()">' + "pregunta.r3"+ ' </button>',
+    '<button id="4" class="btn btn-block btn-primary " onclick="chequeaRespuesta(4), stopProgressBar()">' + "pregunta.r4"+ ' </button>'];
+    function shuffleArray(array) {
+        for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
 </script>
